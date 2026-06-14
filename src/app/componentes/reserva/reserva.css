@@ -1,0 +1,91 @@
+.reserva-container {
+  background-color: #F4EEE8;
+  padding: 50px 5%;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+.reserva-titulo {
+  text-align: center; font-size: 2rem; color: #433529;
+  letter-spacing: 6px; margin-bottom: 6px;
+}
+.reserva-subtitulo {
+  text-align: center; color: #b6a391;
+  font-size: 0.9rem; margin-bottom: 30px;
+}
+.selector-bungalow {
+  display: flex; justify-content: center; gap: 16px; margin-bottom: 28px;
+}
+.btn-bungalow {
+  padding: 10px 32px; border: 1px solid #b6a391; background: transparent;
+  color: #b6a391; border-radius: 30px; font-size: 0.78rem; letter-spacing: 3px;
+  cursor: pointer; font-family: inherit; transition: all 0.3s;
+}
+.btn-bungalow.activo, .btn-bungalow:hover { background: #b6a391; color: white; }
+.calendario-wrapper {
+  background: white; border-radius: 20px; padding: 30px;
+  max-width: 480px; margin: 0 auto 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+}
+.cal-header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 20px;
+}
+.cal-mes-anio { font-size: 1rem; font-weight: 700; color: #433529; letter-spacing: 2px; }
+.cal-nav { background: none; border: none; font-size: 2rem; color: #b6a391; cursor: pointer; }
+.cal-nav:hover { color: #433529; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dia-nombre {
+  text-align: center; font-size: 0.72rem; color: #b6a391;
+  font-weight: 700; letter-spacing: 1px; padding-bottom: 8px;
+}
+.cal-dia-vacio { background: transparent; }
+.cal-dia {
+  text-align: center; padding: 8px 4px; border-radius: 8px;
+  font-size: 0.88rem; cursor: pointer; color: #433529; transition: all 0.2s;
+}
+.cal-dia:hover:not(.ocupado):not(.pasado) { background: #F4EEE8; }
+.cal-dia.ocupado {
+  background: #e8d5c4; color: #b6a391;
+  cursor: not-allowed; text-decoration: line-through;
+}
+.cal-dia.seleccionado { background: #433529; color: white; }
+.cal-dia.en-rango { background: #F4EEE8; color: #433529; }
+.cal-dia.pasado { color: #ccc; cursor: not-allowed; }
+.leyenda { display: flex; justify-content: center; gap: 20px; margin-top: 18px; }
+.leyenda-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #888; }
+.dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.dot.disponible { background: #F4EEE8; border: 1px solid #b6a391; }
+.dot.ocupado { background: #e8d5c4; }
+.dot.seleccionado { background: #433529; }
+.resumen {
+  background: white; border-radius: 16px; padding: 24px;
+  max-width: 480px; margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+}
+.resumen-fila {
+  display: flex; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid #F4EEE8;
+}
+.resumen-label { font-size: 0.75rem; letter-spacing: 2px; color: #b6a391; font-weight: 700; }
+.resumen-valor { font-size: 0.9rem; color: #433529; font-weight: 700; }
+.btn-reservar {
+  width: 100%; margin-top: 18px; padding: 13px; background: #b6a391;
+  color: white; border: none; border-radius: 30px; font-size: 0.78rem;
+  letter-spacing: 3px; cursor: pointer; font-family: inherit;
+  font-weight: 600; transition: background 0.3s;
+}
+.btn-reservar:hover { background: #a08e7d; }
+.btn-limpiar {
+  width: 100%; margin-top: 10px; padding: 10px; background: transparent;
+  color: #b6a391; border: 1px solid #b6a391; border-radius: 30px;
+  font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: all 0.3s;
+}
+.btn-limpiar:hover { background: #F4EEE8; }
+.cargando, .error-msg { text-align: center; margin-top: 16px; font-size: 0.85rem; color: #b6a391; }
+.error-msg { color: #c0392b; }
+
+.error-reserva {
+  color: #b34332;
+  font-size: 0.88rem;
+  margin: 10px 0 0;
+  text-align: center;
+}

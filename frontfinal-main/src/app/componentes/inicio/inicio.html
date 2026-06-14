@@ -1,0 +1,321 @@
+<div class="inicio-page-container">
+
+  <!-- SECCIÓN 1: Hero chica -->
+  <section class="hero-principal" id="inicio">
+    <video autoplay muted loop playsinline class="video-fondo">
+      <source src="video-fondo.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay">
+      <h1 class="titulo-samarana">SAMARANA</h1>
+      <p class="subtitulo-samarana">ALOJAMIENTOS</p>
+      <div class="botones-hero">
+        <button class="btn-hero" (click)="saberMas()">SABER MÁS</button>
+        <button class="btn-hero" routerLink="/login">INICIAR SESIÓN</button>
+      </div>
+    </div>
+  </section>
+
+  <div *ngIf="mostrarContenido">
+
+    <!-- SECCIÓN 2: Video cabaña + Navbar -->
+    <section class="hero-cabanas" id="seccion-cabanas">
+      <video autoplay muted loop playsinline id="video-inicio-principal">
+        <source src="videos/video-inicio-principal.mp4" type="video/mp4">
+      </video>
+      <app-navbar></app-navbar>
+    </section>
+
+    <!-- SECCIÓN 3: Reseñas -->
+    <section class="resenas-section">
+      <div class="resenas-wrapper">
+        <button class="flecha-resena" (click)="anteriorResena()">‹</button>
+        <div class="resenas-container">
+          <div class="resena-card" *ngFor="let r of resenas; let i = index"
+            [class.resena-activa]="i === resenaActual">
+            <div class="resena-header">
+              <div class="resena-avatar">{{ r.inicial }}</div>
+              <div>
+                <p class="resena-nombre">{{ r.nombre }}</p>
+                <p class="resena-meta">{{ r.meta }}</p>
+                <div class="resena-estrellas">★★★★★</div>
+                <p class="resena-tiempo">{{ r.tiempo }}</p>
+              </div>
+            </div>
+            <p class="resena-texto">{{ r.texto }}</p>
+          </div>
+        </div>
+        <button class="flecha-resena" (click)="siguienteResena()">›</button>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: Más que una estadía -->
+    <section id="sobre-samarana" class="detalle-informativo">
+      <div class="contenedor-split">
+        <div class="lado-fotos">
+          <div class="foto-stack">
+            <img src="fotos/fotodepiscina.jpeg" class="foto-atras" alt="Piscina Samarana">
+            <video autoplay muted loop playsinline class="video-medio">
+              <source src="videos/chicaconmaleta.mp4" type="video/mp4">
+            </video>
+            <img src="fotos/foto2fondo.jpeg" class="foto-adelante" alt="Exterior Samarana">
+          </div>
+        </div>
+        <div class="lado-texto">
+          <p class="label-bienvenido">BIENVENIDO A SAMARANA:</p>
+          <h2 class="frase-titulo">"Más que una estadía, un momento para vos"</h2>
+          <div class="descripcion-card">
+            <p>Samarana es un espacio pensado para el descanso y la desconexión.
+               Ubicado en un entorno tranquilo, ofrece la combinación perfecta entre
+               comodidad y naturaleza. Cada bungalow está diseñado para que disfrutes
+               tu estadía con privacidad y calidez.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 5: Reserva + Bungalows -->
+    <section class="reserva-section">
+      <div class="btn-seccion-wrapper">
+        <button class="btn-seccion" (click)="volverBungalows()">RESERVA</button>
+      </div>
+
+      <!-- CARDS -->
+      <div class="bungalows-grid" *ngIf="bungalowSeleccionado === null">
+        <div class="bungalow-card" (click)="seleccionarBungalow(0)">
+          <div class="bungalow-img-placeholder">
+            <span class="bungalow-label">BUNGALOW 1</span>
+            <span class="bungalow-arrow">→</span>
+          </div>
+        </div>
+        <div class="bungalow-card" (click)="seleccionarBungalow(1)">
+          <div class="bungalow-img-placeholder bungalow-2">
+            <span class="bungalow-label">BUNGALOW 2</span>
+            <span class="bungalow-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULARIO CON CALENDARIO -->
+      <div class="reserva-form-panel" *ngIf="bungalowSeleccionado !== null">
+        <div class="reserva-form-inner">
+
+          <button class="btn-volver-bungalows" (click)="volverBungalows()">
+            ← Cambiar bungalow
+          </button>
+
+          <h3 class="reserva-form-titulo">
+            {{ bungalowSeleccionado === 0 ? 'Bungalow 1' : 'Bungalow 2' }}
+          </h3>
+
+          <div class="reserva-campos-top">
+            <div class="reserva-field">
+              <label>Nombre Completo</label>
+              <input type="text" [(ngModel)]="nuevaReserva.usuario.usuario"
+                placeholder="Ej: Juan Pérez" class="reserva-input">
+            </div>
+            <div class="reserva-field">
+              <label>Teléfono</label>
+              <input type="tel" [(ngModel)]="nuevaReserva.telefono"
+                placeholder="Ej: 3447123456" class="reserva-input">
+            </div>
+            <div class="reserva-field">
+              <label>Personas</label>
+              <input type="number" [(ngModel)]="nuevaReserva.cantidad_personas"
+                min="1" max="10" class="reserva-input">
+            </div>
+          </div>
+
+          <!-- CALENDARIO -->
+          <div class="calendario-wrapper">
+            <div class="cal-nav">
+              <button class="cal-btn-nav" (click)="mesAnterior()">‹</button>
+              <span class="cal-titulo">{{ nombreMes }} {{ anioActual }}</span>
+              <button class="cal-btn-nav" (click)="mesSiguiente()">›</button>
+            </div>
+            <div class="cal-grid">
+              <div class="cal-dia-header" *ngFor="let d of diasSemana">{{ d }}</div>
+              <div
+                *ngFor="let dia of diasCalendario"
+                class="cal-dia"
+                [class.vacio]="!dia"
+                [class.pasado]="dia && esPasado(dia)"
+                [class.inicio]="dia && esFechaInicio(dia)"
+                [class.fin]="dia && esFechaFin(dia)"
+                [class.en-rango]="dia && estaEnRango(dia)"
+                [class.hoy]="dia && esHoy(dia)"
+                (click)="dia && !esPasado(dia) && seleccionarFecha(dia)">
+                {{ dia ? dia.getDate() : '' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- RESUMEN FECHAS -->
+          <div class="reserva-fechas-resumen"
+            *ngIf="nuevaReserva.fecha_inicio || nuevaReserva.fecha_fin">
+            <div class="fecha-chip" *ngIf="nuevaReserva.fecha_inicio">
+              <span class="chip-label">Ingreso</span>
+              <span class="chip-valor">{{ nuevaReserva.fecha_inicio }}</span>
+            </div>
+            <div class="fecha-separador"
+              *ngIf="nuevaReserva.fecha_inicio && nuevaReserva.fecha_fin">→</div>
+            <div class="fecha-chip" *ngIf="nuevaReserva.fecha_fin">
+              <span class="chip-label">Egreso</span>
+              <span class="chip-valor">{{ nuevaReserva.fecha_fin }}</span>
+            </div>
+            <button class="chip-limpiar" (click)="limpiarFechas()">✕ Limpiar</button>
+          </div>
+
+          <button
+            class="btn-reserva-confirmar"
+            [disabled]="!nuevaReserva.fecha_inicio || !nuevaReserva.fecha_fin ||
+              !nuevaReserva.usuario.usuario || !nuevaReserva.telefono"
+            (click)="procesarReserva()">
+            Confirmar por WhatsApp
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 6: Servicios -->
+    <section class="servicios-section">
+      <div class="btn-seccion-wrapper">
+        <button class="btn-seccion">SERVICIOS</button>
+      </div>
+      <div class="servicios-grid-iconos">
+        <div class="servicio-item">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#b6a391"
+            stroke-width="2" stroke-linecap="round">
+            <rect x="6" y="10" width="36" height="28" rx="3"/>
+            <line x1="6" y1="22" x2="42" y2="22"/>
+            <circle cx="24" cy="16" r="3"/>
+            <rect x="28" y="12" width="8" height="8" rx="1"/>
+          </svg>
+          <span>Cocina completa</span>
+        </div>
+        <div class="servicio-item">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#b6a391"
+            stroke-width="2" stroke-linecap="round">
+            <rect x="6" y="8" width="36" height="24" rx="3"/>
+            <line x1="16" y1="38" x2="32" y2="38"/>
+            <line x1="24" y1="32" x2="24" y2="38"/>
+            <circle cx="34" cy="14" r="2" fill="#b6a391"/>
+          </svg>
+          <span>Direct TV</span>
+        </div>
+        <div class="servicio-item">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#b6a391"
+            stroke-width="2" stroke-linecap="round">
+            <path d="M8 30 Q8 12 24 12 Q40 12 40 30"/>
+            <path d="M14 30 Q14 18 24 18 Q34 18 34 30"/>
+            <path d="M20 30 Q20 24 24 24 Q28 24 28 30"/>
+            <circle cx="24" cy="30" r="2" fill="#b6a391"/>
+            <line x1="24" y1="32" x2="24" y2="40"/>
+          </svg>
+          <span>Aire acondicionado</span>
+        </div>
+        <div class="servicio-item">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#b6a391"
+            stroke-width="2" stroke-linecap="round">
+            <rect x="10" y="14" width="28" height="20" rx="4"/>
+            <line x1="6" y1="24" x2="10" y2="24"/>
+            <line x1="42" y1="24" x2="38" y2="24"/>
+            <line x1="24" y1="10" x2="24" y2="14"/>
+            <line x1="24" y1="34" x2="24" y2="38"/>
+          </svg>
+          <span>Wifi</span>
+        </div>
+        <div class="servicio-item">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#b6a391"
+            stroke-width="2" stroke-linecap="round">
+            <ellipse cx="24" cy="30" rx="16" ry="8"/>
+            <path d="M8 30 Q8 18 24 18 Q40 18 40 30"/>
+            <line x1="12" y1="36" x2="36" y2="36"/>
+          </svg>
+          <span>Piscina</span>
+        </div>
+        <div class="servicio-item">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#b6a391"
+            stroke-width="2" stroke-linecap="round">
+            <rect x="10" y="28" width="28" height="6" rx="1"/>
+            <rect x="8" y="34" width="32" height="4" rx="1"/>
+            <line x1="16" y1="28" x2="16" y2="18"/>
+            <line x1="24" y1="28" x2="24" y2="16"/>
+            <line x1="32" y1="28" x2="32" y2="18"/>
+            <path d="M14 18 Q16 14 18 18" stroke="#b6a391"/>
+            <path d="M22 16 Q24 12 26 16" stroke="#b6a391"/>
+            <path d="M30 18 Q32 14 34 18" stroke="#b6a391"/>
+          </svg>
+          <span>Parrilla</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 7: Mapa -->
+    <section class="location-section" id="ubicacion">
+      <video autoplay muted loop playsinline class="location-bg-video">
+        <source src="videos/videodepatiointerno.mp4" type="video/mp4">
+      </video>
+      <div class="location-overlay">
+        <div class="location-container-minimal">
+          <h2 class="location-title">SAMARANA</h2>
+          <div class="location-body">
+            <div class="map-frame">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3376.188961396995!2d-58.18873522456513!3d-32.19913857391048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95ae320bcc3460e9%3A0x74b5f423b66d9bd6!2sBungalows%20Samarana!5e0!3m2!1ses!2sar!4v1778817856060!5m2!1ses!2sar"
+                width="100%" height="100%" style="border:0;"
+                allowfullscreen="" loading="lazy">
+              </iframe>
+            </div>
+            <div class="location-info">
+              <p>El alojamiento se encuentra en San José, Entre Ríos.</p>
+              <p>Ruta 130 ex ruta 26, km 5 esquina Hoffman.</p>
+              <p>A 5 minutos del balneario y termas San José</p>
+              <a href="https://maps.google.com/?q=Bungalows+Samarana"
+                target="_blank" class="btn-como-llegar">CÓMO LLEGAR</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer-samarana" id="contacto">
+      <div class="social-links">
+        <a href="mailto:tuemail@gmail.com" class="social-item" title="Email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" width="20" height="20">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <polyline points="2,4 12,13 22,4"/>
+          </svg>
+        </a>
+        <a href="https://instagram.com/" target="_blank"
+          class="social-item" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" width="20" height="20">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="5"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="https://facebook.com/" target="_blank"
+          class="social-item" title="Facebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" width="20" height="20">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+        </a>
+        <a href="https://wa.me/549TUNUMERO" target="_blank"
+          class="social-item" title="WhatsApp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" width="20" height="20">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7
+              a8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8
+              a8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+        </a>
+      </div>
+    </footer>
+
+  </div>
+</div>

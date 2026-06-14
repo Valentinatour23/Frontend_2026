@@ -1,0 +1,77 @@
+<div class="login-container">
+  <div class="login-card" [class.registro-card]="modoRegistro">
+    <h2>SAMARANA</h2>
+    <p class="subtitulo">{{ modoRegistro ? 'Crear cuenta' : 'Bienvenido' }}</p>
+
+    <form *ngIf="!modoRegistro" (ngSubmit)="iniciarSesion($event)" class="auth-form auth-form">
+      <div class="form-group">
+        <label for="loginUsuario">Usuario</label>
+        <input id="loginUsuario" type="text" name="usuario" [(ngModel)]="usuario" placeholder="Ingresá tu usuario" />
+      </div>
+
+      <div class="form-group">
+        <label for="loginContrasena">Contrasena</label>
+        <input id="loginContrasena" type="password" name="contrasena" [(ngModel)]="contrasena" placeholder="Ingresá tu contraseña" />
+      </div>
+
+      <p class="error" *ngIf="error">{{ error }}</p>
+      <p class="exito" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+
+      <button type="submit" [disabled]="cargando">
+        {{ cargando ? 'INGRESANDO...' : 'INICIAR SESIÓN' }}
+      </button>
+    </form>
+
+    <form *ngIf="modoRegistro" (ngSubmit)="registrarse($event)" class="auth-form registro-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="registroNombre">Nombre</label>
+          <input id="registroNombre" type="text" name="nombre" [(ngModel)]="registro.nombre" required placeholder="Ingresá tu nombre" />
+        </div>
+
+        <div class="form-group">
+          <label for="registroApellido">Apellido</label>
+          <input id="registroApellido" type="text" name="apellido" [(ngModel)]="registro.apellido" required placeholder="Ingresá tu apellido"/>
+        </div>
+
+        <div class="form-group">
+          <label for="registroDni">DNI</label>
+          <input id="registroDni" type="text" name="dni" [(ngModel)]="registro.dni" required placeholder="Ingresá tu DNI"/>
+        </div>
+
+        <div class="form-group">
+          <label for="registroEmail">Email</label>
+          <input id="registroEmail" type="email" name="email" [(ngModel)]="registro.email" required placeholder="tu@email.com"/>
+        </div>
+
+        <div class="form-group">
+          <label for="registroTelefono">Teléfono</label>
+          <input id="registroTelefono" type="tel" name="telefono" [(ngModel)]="registro.telefono" required placeholder="Ingresá tu teléfono"/>
+        </div>
+     
+
+      <div class="form-group">
+          <label for="registroUsuario">Usuario</label>
+          <input id="registroUsuario" type="text" name="registroUsuario" [(ngModel)]="registro.usuario" required placeholder="Ingresá un nombre de usuario"/>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="registroContrasena">Contraseña</label>
+        <input id="registroContrasena" type="password" name="registroContrasena" [(ngModel)]="registro.contrasena" required placeholder="Ingresá una contraseña"/>
+      </div>
+
+      <p class="error" *ngIf="error">{{ error }}</p>
+
+      <button type="submit" [disabled]="cargando">
+        {{ cargando ? 'REGISTRANDO...' : 'REGISTRARSE' }}
+      </button>
+    </form>
+
+    <button type="button" class="btn-secundario" (click)="alternarModo()" [disabled]="cargando">
+      {{ modoRegistro ? 'YA TENGO CUENTA' : 'CREAR CUENTA' }}
+    </button>
+
+    <a routerLink="/inicio" class="volver">Volver al inicio</a>
+  </div>
+</div>

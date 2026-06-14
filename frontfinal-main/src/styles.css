@@ -1,0 +1,61 @@
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 40px; 
+    margin-top: 40px;
+    width: 100%;
+}
+
+.btn-samarana {
+    padding: 15px 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px; /* Bordes un poquito redondeados para que queden finos */
+    background-color: rgba(255, 255, 255, 0.85); /* Blanco con un toque de transparencia */
+    color: #4a3728; /* Color de letra marrón oscuro/tierra para el estilo Samarana */
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+.btn-samarana:hover {
+    background-color: white;
+    transform: translateY(-3px); /* Efecto de que flota al pasar el mouse */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(0.6);
+}
+
+.content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 10;
+}

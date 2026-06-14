@@ -1,0 +1,338 @@
+.admin-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8fafc;
+}
+
+
+/* Encabezados y Estructura Global */
+.admin-header {
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 15px;
+}
+.header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-main h2 {
+  color: #433529;
+  margin: 0;
+  font-size: 1.6rem;
+}
+.btn-clean-all {
+  background-color: #ef4444;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.btn-clean-all:hover {
+  background-color: #dc2626;
+}
+
+
+/* Filtros y Buscadores */
+.search-filters-bar {
+  display: flex;
+  gap: 15px;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 150px;
+}
+.filter-group.text-search {
+  flex: 2;
+}
+.filter-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 5px;
+}
+.filter-group input, .filter-group select {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+  color: #334155;
+}
+
+
+/* Tabs de navegación rápida */
+.filter-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.tab-btn {
+  padding: 8px 16px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #64748b;
+}
+.tab-btn.active {
+  background: #433529;
+  color: #ffffff;
+  border-color: #433529;
+}
+
+
+/* Tabla de Datos Moderna */
+.table-responsive {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  overflow-x: auto;
+  margin-bottom: 30px;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.92rem;
+}
+.admin-table th {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 12px 16px;
+  font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+}
+.admin-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+.fila-seleccionada {
+  background-color: #f0fdf4 !important;
+}
+
+
+/* Badges de Estado */
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.badge-pendiente { background: #fef3c7; color: #d97706; }
+.badge-confirmada { background: #d1fae5; color: #059669; }
+.badge-cancelada { background: #fee2e2; color: #dc2626; }
+
+
+/* Botones de acción rápidos */
+.action-buttons {
+  display: flex;
+  gap: 6px;
+}
+.btn-action {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-confirm { background: #10b981; color: white; }
+.btn-cancel { background: #ef4444; color: white; }
+.btn-delete { background: #64748b; color: white; }
+
+
+/* Panel Avanzado de Mantenimientos */
+.maintenance-action-bar {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  margin-top: 30px;
+  border-left: 4px solid #facc15;
+}
+.maint-title h3 { margin: 0; color: #433529; }
+.maint-title p { margin: 4px 0 15px 0; font-size: 0.88rem; color: #64748b; }
+.maint-fields-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.maint-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 140px;
+}
+.maint-field.text-flex { flex: 2; }
+.maint-field label { font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #475569; }
+.maint-field input, .maint-field select { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; }
+.btn-maint-submit {
+  background: #facc15;
+  color: #422006;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+/* Bloques Activos Badges */
+.active-blocks-list { margin-top: 20px; padding-top: 15px; border-top: 1px dashed #e2e8f0; }
+.blocks-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.block-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #fef08a;
+  color: #854d0e;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  border: 1px solid #fde047;
+}
+.btn-remove-block { background: none; border: none; color: #9a3412; font-weight: bold; cursor: pointer; }
+
+
+/* Control Analítico de Gráficos Rediseñados */
+.analytics-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 25px;
+}
+.chart-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  flex: 1 1 calc(50% - 20px);
+  min-width: 280px;
+}
+.chart-card.block-wide { flex: 1 1 100%; }
+.chart-container { position: relative; height: 160px; width: 100%; }
+
+
+/* Estructura del Calendario Dual */
+.split-calendars-wrapper {
+  margin-top: 30px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.calendars-master-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.calendars-master-header h2 { font-size: 1.3rem; color: #433529; }
+.cal-nav-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.calendar-legends-bar { display: flex; gap: 15px; margin-bottom: 20px; font-size: 0.85rem; flex-wrap: wrap; }
+.leg-color { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 4px; }
+.calendars-row { display: flex; gap: 25px; flex-wrap: wrap; }
+.calendar-mini-card { flex: 1; min-width: 290px; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.day-name { text-align: center; font-weight: bold; padding: 5px; font-size: 0.85rem; color: #64748b; }
+.calendar-day {
+  padding: 12px 5px;
+  text-align: center;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  min-height: 20px;
+}
+.dashboard-cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.card-kpi{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  text-align:center;
+}
+
+.card-kpi h3{
+  margin:0;
+  font-size:28px;
+  color:#2d6a4f;
+}
+
+.card-kpi span{
+  color:#64748b;
+}
+
+.btn-edit{
+  background:#3b82f6;
+  color:white;
+}
+
+.btn-export{
+  background:#dc2626;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:8px;
+  margin-top:15px;
+  cursor:pointer;
+}
+
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+
+.modal-reserva{
+  background:white;
+  width:500px;
+  padding:25px;
+  border-radius:12px;
+}
+
+.modal-reserva input{
+  width:100%;
+  margin-bottom:10px;
+  padding:10px;
+}
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+}

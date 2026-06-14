@@ -1,0 +1,42 @@
+<section class="booking-section">
+  <div class="booking-container">
+    <h2 class="booking-title">Solicita tu Reserva</h2>
+    <p class="booking-subtitle">Selecciona bungalow, fechas y cantidad de personas para continuar por WhatsApp.</p>
+
+    <form (ngSubmit)="procesarReserva()" #bookingForm="ngForm" class="booking-form">
+
+      <div class="form-group">
+        <label for="alojamiento">Bungalow</label>
+        <select id="alojamiento" [(ngModel)]="nuevaReserva.alojamiento" name="alojamiento" class="form-control" required>
+          <option [ngValue]="null" disabled>Selecciona un bungalow...</option>
+          <option *ngFor="let b of listaAlojamientos" [ngValue]="b">
+            {{ b.nombre_alojamiento || b.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fechaInicio">Fecha de Ingreso</label>
+          <input type="date" id="fechaInicio" [min]="fechaMinima" [(ngModel)]="nuevaReserva.fecha_inicio" name="fecha_inicio" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="fechaFin">Fecha de Egreso</label>
+          <input type="date" id="fechaFin" [min]="nuevaReserva.fecha_inicio || fechaMinima" [(ngModel)]="nuevaReserva.fecha_fin" name="fecha_fin" class="form-control" required>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top: 15px;">
+        <label for="cantidadPersonas">Cantidad de Personas</label>
+        <input type="number" id="cantidadPersonas" [(ngModel)]="nuevaReserva.cantidad_personas" (input)="normalizarCantidadPersonas()" name="cantidad_personas" class="form-control" min="1" [max]="nuevaReserva.alojamiento?.capacidad_max || 10" required>
+      </div>
+
+      <p class="error-reserva" *ngIf="errorReserva">{{ errorReserva }}</p>
+
+      <button type="submit" [disabled]="!bookingForm.form.valid" class="btn-booking">
+        Confirmar Disponibilidad por WhatsApp
+      </button>
+
+    </form>
+  </div>
+</section>

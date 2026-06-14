@@ -1,0 +1,21 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>SAMARANA</h2>
+    <p class="subtitulo">Bienvenido</p>
+
+    <div class="form-group">
+      <label>Usuario</label>
+      <input type="text" [(ngModel)]="usuario" placeholder="Ingresá tu usuario" />
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" [(ngModel)]="contrasena" placeholder="Ingresá tu contraseña" />
+    </div>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+    <button (click)="iniciarSesion()" [disabled]="cargando">
+      {{ cargando ? 'INGRESANDO...' : 'INICIAR SESIÓN' }}
+    </button>
+    <a routerLink="/inicio" class="volver">← Volver al inicio</a>
+  </div>
+</div>

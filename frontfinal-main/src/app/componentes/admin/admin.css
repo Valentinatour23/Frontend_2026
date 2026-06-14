@@ -1,0 +1,124 @@
+.admin-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.admin-header {
+  border-bottom: 2px solid #f4f6f9;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.admin-header h2 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.admin-header p {
+  color: #7f8c8d;
+  margin: 5px 0 0 0;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-table th {
+  background-color: #f8f9fa;
+  color: #34495e;
+  padding: 15px;
+  font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.admin-table td {
+  padding: 15px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #4a5568;
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.text-center { text-align: center; }
+
+/* Estilos de las etiquetas de Estado */
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.badge-pendiente {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.badge-confirmada {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.badge-cancelada {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Botones de acción */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action {
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-confirm {
+  background-color: #10b981;
+  color: white;
+}
+.btn-confirm:hover { background-color: #059669; }
+
+.btn-cancel {
+  background-color: #ef4444;
+  color: white;
+}
+.btn-cancel:hover { background-color: #dc2626; }
+
+.text-muted {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.no-data {
+  padding: 40px !important;
+  color: #94a3b8;
+  font-style: italic;
+}

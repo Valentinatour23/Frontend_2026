@@ -1,0 +1,24 @@
+<nav class="navbar-samarana">
+  
+  <div class="nav-bloque-izquierdo">
+    <a class="nav-item nav-item-activo" (click)="irA('inicio')">INICIO</a>
+    <a class="nav-item" (click)="irA('contacto')">CONTACTO</a>
+    <a class="nav-item" (click)="irTurismo()">TURISMO</a>
+  </div>
+
+  <div class="nav-logo">
+    <span class="logo-letter">S</span>
+  </div>
+
+  <div class="nav-bloque-derecho">
+    <a class="nav-item" (click)="irA('ubicacion')">UBICACIÓN</a>
+    
+    <a *ngIf="!estaLogueado" class="nav-item btn-ingresar" routerLink="/login">INGRESAR</a>
+
+    <div *ngIf="estaLogueado" class="user-session">
+      <span class="nav-saludo">¡HOLA, {{ nombreUsuario | uppercase }}!</span>
+      <a class="nav-item btn-salir" (click)="cerrarSesion()">SALIR</a>
+    </div>
+  </div>
+
+</nav>

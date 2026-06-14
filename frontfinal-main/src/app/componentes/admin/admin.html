@@ -1,0 +1,67 @@
+<section class="admin-container">
+  <div class="admin-header">
+    <h2><i class="fa-solid fa-sliders"></i> Panel de Control - Cabañas Samarana</h2>
+    <p>Gestión y validación de reservas en tiempo real.</p>
+  </div>
+
+  <div class="table-responsive">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Nro</th>
+          <th>Cliente</th>
+          <th>Alojamiento</th>
+          <th>Ingreso</th>
+          <th>Egreso</th>
+          <th class="text-center">Pers.</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (res of listaReservas; track res.id_reserva) {
+          <tr>
+            <td><strong>#{{ res.id_reserva }}</strong></td>
+            <td>{{ res.usuario?.usuario || 'Sin registrar' }}</td>
+            <td>{{ res.alojamiento?.nombre_alojamiento }}</td>
+            <td>{{ res.fecha_inicio | date:'dd/MM/yyyy' }}</td>
+            <td>{{ res.fecha_fin | date:'dd/MM/yyyy' }}</td>
+            <td class="text-center">{{ res.cantidad_personas }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'badge-pendiente': res.estado?.id_estado === 1,
+                'badge-confirmada': res.estado?.id_estado === 2,
+                'badge-cancelada': res.estado?.id_estado === 3
+              }">
+                {{ res.estado?.nombre_estado }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                @if (res.estado?.id_estado === 1) {
+                  <button (click)="actualizarEstado(res.id_reserva, 2)" class="btn-action btn-confirm" title="Confirmar Pago">
+                    ✓
+                  </button>
+                }
+
+                @if (res.estado?.id_estado !== 3) {
+                  <button (click)="actualizarEstado(res.id_reserva, 3)" class="btn-action btn-cancel" title="Cancelar Reserva">
+                    ✕
+                  </button>
+                }
+                
+                @if (res.estado?.id_estado === 3) {
+                  <span class="text-muted">Sin acciones</span>
+                }
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="8" class="text-center no-data">No hay registros de reservas cargados en el sistema.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

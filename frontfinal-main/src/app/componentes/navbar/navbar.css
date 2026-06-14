@@ -1,0 +1,54 @@
+.navbar-samarana {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding: 20px 10px;
+  background: transparent;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-item {
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 8px 15px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: background 0.25s;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nav-item-activo {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.nav-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-letter {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  color: white;
+  font-weight: bold;
+  line-height: 1;
+}
