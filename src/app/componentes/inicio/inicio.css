@@ -902,3 +902,134 @@ backend-status {
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Sección: Información del bungalow */
+.info-bungalow-section {
+  background: #F2EDE4;
+  padding: 3rem 2rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.info-bungalow-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 2fr;
+  gap: 1.25rem;
+  max-width: 960px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.info-card {
+  background: #FAF7F2;
+  border: 0.5px solid #C8B89A;
+  border-radius: 4px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.info-card-label {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #8B7355;
+  margin: 0 0 1.5rem;
+  width: 100%;
+  text-align: center;
+}
+
+/* Capacidad */
+.capacidad-numero {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 80px;
+  font-weight: 300;
+  color: #3A2E22;
+  line-height: 1;
+  margin: 0;
+}
+
+.capacidad-texto {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8B7355;
+  margin: 12px 0 0;
+  line-height: 1.8;
+  text-align: center;
+}
+
+/* Horarios */
+.horario-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.horario-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.horario-label {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #8B7355;
+}
+
+.horario-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: #3A2E22;
+  line-height: 1;
+}
+
+.horario-divider {
+  width: 0.5px;
+  height: 48px;
+  background: #C8B89A;
+}
+
+/* Reglas */
+.reglas-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.reglas-lista li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 0.5px solid #DDD5C5;
+  font-size: 12.5px;
+  font-weight: 300;
+  color: #3A2E22;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+}
+
+.reglas-lista li:last-child {
+  border-bottom: none;
+}
+
+.reglas-lista li::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #8B7355;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
