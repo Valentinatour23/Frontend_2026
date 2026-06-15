@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,7 +19,10 @@ import Swal from 'sweetalert2';
 })
 export class Reserva implements OnInit {
 
-  listaAlojamientos: Alojamiento[] = [];
+  // Signal: cuando se actualiza, la UI reacciona automáticamente sin recargar la página
+  listaAlojamientos = signal<Alojamiento[]>([]);
+  cantidadAlojamientos = computed(() => this.listaAlojamientos().length);
+
   errorReserva: string = '';
   usuarioLogueado: any = null;
 
@@ -35,21 +38,21 @@ export class Reserva implements OnInit {
   constructor(
     private _alojamientoService: AlojamientoService,
     private _reservaService: ReservaService,
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-
-  this._alojamientoService.alojamientos().subscribe({
-        next: (data: Alojamiento[]) => {
-          this.listaAlojamientos = data;
-        },
-        error: (err: any) => console.error('Error al conectar:', err)
-      });
+    this._alojamientoService.alojamientos().subscribe({
+      next: (data: Alojamiento[]) => {
+        // Al actualizar el Signal, la UI reacciona automáticamente
+        this.listaAlojamientos.set(data);
+      },
+      error: (err: any) => console.error('Error al conectar:', err)
+    });
 
     this.usuarioLogueado = this.authService.obtenerUsuarioCompleto();
-    
+
     if (!this.usuarioLogueado) {
       console.warn('No hay ningún usuario logueado en este momento.');
     }
@@ -58,19 +61,20 @@ export class Reserva implements OnInit {
   procesarReserva(): void {
 
     if (!this.usuarioLogueado) {
-    
-    Swal.fire({
-      title: '¡Atención!',
-      text: 'Debes iniciar sesión o registrarte para poder realizar una reserva.',
-      icon: 'warning',
-      confirmButtonText: 'Ir al Login',
-      confirmButtonColor: '#ddd', 
-      allowOutsideClick: false     
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/login']);
-      }
-    })};
+      Swal.fire({
+        title: '¡Atención!',
+        text: 'Debes iniciar sesión o registrarte para poder realizar una reserva.',
+        icon: 'warning',
+        confirmButtonText: 'Ir al Login',
+        confirmButtonColor: '#ddd',
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/login']);
+        }
+      });
+      return;
+    }
 
     const bungalowElegido = this.nuevaReserva.alojamiento;
     this.normalizarCantidadPersonas();
@@ -80,23 +84,22 @@ export class Reserva implements OnInit {
       return;
     }
 
-
     const reserva = {
       fecha_inicio: this.nuevaReserva.fecha_inicio,
       fecha_fin: this.nuevaReserva.fecha_fin,
       cantidad_personas: this.nuevaReserva.cantidad_personas,
-      id_usuario: this.usuarioLogueado.id_usuario, 
+      id_usuario: this.usuarioLogueado.id_usuario,
       alojamiento: {
         id_alojamiento: bungalowElegido.id_alojamiento
       }
     };
 
-   this._reservaService.crearReserva(reserva).subscribe({
+    this._reservaService.crearReserva(reserva).subscribe({
       next: (reservaGuardada: any) => {
-        
+
         if (!reservaGuardada || reservaGuardada.mensaje || !reservaGuardada.id_reserva) {
           const mensajeOcupado = reservaGuardada?.mensaje || 'Lo sentimos, el bungalow ya está ocupado en esas fechas.';
-          
+
           Swal.fire({
             title: 'Fechas No Disponibles',
             text: mensajeOcupado,
@@ -105,8 +108,8 @@ export class Reserva implements OnInit {
             confirmButtonColor: '#d33'
           });
 
-          this.errorReserva = mensajeOcupado; 
-          return; 
+          this.errorReserva = mensajeOcupado;
+          return;
         }
 
         this.errorReserva = '';
@@ -138,7 +141,6 @@ export class Reserva implements OnInit {
         });
       },
       error: (err: any) => {
-
         console.error('Error crítico del servidor:', err);
         Swal.fire({
           title: 'Error de Conexión',
@@ -155,13 +157,8 @@ export class Reserva implements OnInit {
     const maximo = this.nuevaReserva.alojamiento?.capacidad_max || 10;
     let cantidad = Number(this.nuevaReserva.cantidad_personas) || 1;
 
-    if (cantidad < 1) {
-      cantidad = 1;
-    }
-
-    if (cantidad > maximo) {
-      cantidad = maximo;
-    }
+    if (cantidad < 1) cantidad = 1;
+    if (cantidad > maximo) cantidad = maximo;
 
     this.nuevaReserva.cantidad_personas = cantidad;
   }

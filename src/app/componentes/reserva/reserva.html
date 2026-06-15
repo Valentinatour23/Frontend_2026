@@ -9,7 +9,7 @@
         <label for="alojamiento">Bungalow</label>
         <select id="alojamiento" [(ngModel)]="nuevaReserva.alojamiento" name="alojamiento" class="form-control" required>
           <option [ngValue]="null" disabled>Selecciona un bungalow...</option>
-          <option *ngFor="let b of listaAlojamientos" [ngValue]="b">
+          <option *ngFor="let b of listaAlojamientos()" [ngValue]="b">
             {{ b.nombre_alojamiento || b.nombre }}
           </option>
         </select>
