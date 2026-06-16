@@ -336,3 +336,34 @@
   gap:10px;
   justify-content:flex-end;
 }
+/* Colores del calendario */
+.day-libre {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+.day-pendiente {
+  background-color: #fbbf24;
+  color: #422006;
+  font-weight: 600;
+}
+.day-ocupado {
+  background-color: #10b981;
+  color: #ffffff;
+  font-weight: 600;
+}
+.day-mantenimiento {
+  background-color: #facc15;
+  color: #422006;
+  font-weight: 600;
+}
+.day-vacio {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+/* Colores de la leyenda */
+.leg-color.libre { background-color: #e2e8f0; }
+.leg-color.pendiente { background-color: #edfb24; }
+.leg-color.ocupado { background-color: #10b981; }
+.leg-color.mantenimiento { background-color: #fa7c15; }
