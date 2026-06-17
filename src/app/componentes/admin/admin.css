@@ -367,3 +367,108 @@
 .leg-color.pendiente { background-color: #edfb24; }
 .leg-color.ocupado { background-color: #10b981; }
 .leg-color.mantenimiento { background-color: #fa7c15; }
+
+/* Próximas llegadas */
+.proximas-llegadas {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+  border-left: 4px solid #433529;
+}
+.proximas-llegadas h3 {
+  color: #433529;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+.llegadas-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.llegada-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+.llegada-fecha {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #433529;
+  min-width: 45px;
+}
+.llegada-info {
+  flex: 1;
+}
+.llegada-nombre {
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.9rem;
+}
+.llegada-detalle {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+/* Pestañas de navegación principal */
+.pestanas-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0;
+}
+.pestana-btn {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+  border-radius: 4px 4px 0 0;
+}
+.pestana-btn:hover {
+  color: #433529;
+  background: #f8fafc;
+}
+.pestana-btn.active {
+  color: #433529;
+  border-bottom: 3px solid #433529;
+  font-weight: 700;
+}
+.sin-llegadas {
+  text-align: center;
+  padding: 30px;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px dashed #e2e8f0;
+}
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.btn-inicio {
+  background-color: #433529;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.btn-inicio:hover {
+  background-color: #2d2219;
+}

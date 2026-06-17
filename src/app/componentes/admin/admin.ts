@@ -3,6 +3,7 @@ import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Chart, registerables } from 'chart.js';
 import { ReservaService } from '../../services/reserva.service';
+import { Router } from '@angular/router';
 Chart.register(...registerables);
 
 @Component({
@@ -13,18 +14,26 @@ Chart.register(...registerables);
   styleUrls: ['./admin.css']
 })
 export class AdminComponent implements OnInit, AfterViewInit {
+
+  // Datos
   listaReservas: any[] = [];
   bloqueosActivos: any[] = [];
   reservaSeleccionada: any = null;
 
+  // Pestañas
+  pestanaActiva: string = 'dashboard';
+
+  // Filtros
   textoBusqueda: string = '';
   cabanaSeleccionada: string = 'todas';
   fechaDesde: string = '';
   fechaHasta: string = '';
   filtroActual: string = 'todos';
 
+  // Bloqueos
   nuevoBloqueo: any = { cabana: 'Bungalow A', motivo: '', inicio: '', fin: '' };
 
+  // Calendario
   fechaCalendarioActual: Date = new Date();
   nombresMeses: string[] = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -34,35 +43,124 @@ export class AdminComponent implements OnInit, AfterViewInit {
   diasBungalowB: any[] = [];
 
   constructor(
-    private cdr: ChangeDetectorRef,
-    private reservaService: ReservaService
-  ) {}
+  private cdr: ChangeDetectorRef,
+  private reservaService: ReservaService,
+  private router: Router 
+) {}
 
   ngOnInit(): void {
     this.cargarDatos();
   }
 
   ngAfterViewInit(): void {}
-
-  cargarDatos(): void {
-  this.reservaService.listarTodas().subscribe({
-    next: (data: any[]) => {
-      this.listaReservas = data;
-      this.cargarDiasCalendario();
-      this.cdr.detectChanges(); 
-      setTimeout(() => {
-        this.inicializarGraficos();
-      }, 100);
-    },
-    error: (err) => console.error('Error al cargar reservas:', err)
-  });
+  
+  irAlInicio(): void {
+  this.router.navigate(['/inicio']);
 }
 
-  eliminarTodosLosCancelados(): void {
-    this.listaReservas = this.listaReservas.filter(res => res.estado?.id_estado !== 3);
-    this.cargarDiasCalendario();
-    this.inicializarGraficos();
+exportarExcel(): void {
+  const reservasParaExportar = this.listaReservas
+    .filter(r => r.estado?.id_estado !== 3) // Solo activas
+    .map(r => ({
+      'Nro Reserva': r.id_reserva,
+      'Cliente': this.obtenerNombreCliente(r.usuario),
+      'Email': r.usuario?.email || '',
+      'Teléfono': r.usuario?.telefono || '',
+      'Alojamiento': r.alojamiento?.nombre_alojamiento || '',
+      'Ingreso': r.fecha_inicio,
+      'Egreso': r.fecha_fin,
+      'Personas': r.cantidad_personas,
+      'Total': r.total_tarifa,
+      'Estado': r.estado?.nombre_estado || ''
+    }));
+
+  // Convertir a CSV
+  const headers = Object.keys(reservasParaExportar[0]);
+  const csvContent = [
+    headers.join(','),
+    ...reservasParaExportar.map(row =>
+      headers.map(h => `"${(row as any)[h] || ''}"`).join(',')
+    )
+  ].join('\n');
+
+  // Descargar
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `reservas_samarana_${new Date().toLocaleDateString('es-AR').replace(/\//g, '-')}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+  // --- CARGA DE DATOS ---
+
+  cargarDatos(): void {
+    this.reservaService.listarTodas().subscribe({
+      next: (data: any[]) => {
+        this.listaReservas = data;
+        this.cargarDiasCalendario();
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.inicializarGraficos();
+        }, 100);
+      },
+      error: (err) => console.error('Error al cargar reservas:', err)
+    });
   }
+
+  // --- PESTAÑAS ---
+
+  cambiarPestana(pestana: string): void {
+    this.pestanaActiva = pestana;
+    if (pestana === 'estadisticas') {
+      setTimeout(() => this.inicializarGraficos(), 100);
+    }
+  }
+
+  // --- KPIs ---
+
+  get totalReservasActivas(): number {
+    return this.listaReservas.filter(r => r.estado?.id_estado === 1 || r.estado?.id_estado === 2).length;
+  }
+
+  get ingresosMesActual(): number {
+    const mesActual = new Date().getMonth();
+    return this.listaReservas
+      .filter(r => r.estado?.id_estado === 2 && new Date(r.fecha_inicio).getMonth() === mesActual)
+      .reduce((acc, r) => acc + (r.total_tarifa || 0), 0);
+  }
+
+  get totalPendientes(): number {
+    return this.listaReservas.filter(r => r.estado?.id_estado === 1).length;
+  }
+
+  get proximoCheckIn(): string {
+    const hoy = new Date();
+    const proxima = this.listaReservas
+      .filter(r => r.estado?.id_estado === 2 && new Date(r.fecha_inicio) >= hoy)
+      .sort((a, b) => new Date(a.fecha_inicio).getTime() - new Date(b.fecha_inicio).getTime())[0];
+    if (!proxima) return 'Sin próximos';
+    return this.obtenerNombreCliente(proxima.usuario) + ' — ' + proxima.alojamiento?.nombre_alojamiento;
+  }
+
+  get proximasLlegadas(): any[] {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const en7dias = new Date(hoy);
+    en7dias.setDate(hoy.getDate() + 7);
+
+    return this.listaReservas
+      .filter(r => {
+        const fechaIngreso = new Date(r.fecha_inicio);
+        fechaIngreso.setHours(0, 0, 0, 0);
+        return (r.estado?.id_estado === 1 || r.estado?.id_estado === 2) &&
+               fechaIngreso >= hoy &&
+               fechaIngreso <= en7dias;
+      })
+      .sort((a, b) => new Date(a.fecha_inicio).getTime() - new Date(b.fecha_inicio).getTime());
+  }
+
+  // --- FILTROS ---
 
   cambiarFiltro(filtro: string): void {
     this.filtroActual = filtro;
@@ -90,6 +188,14 @@ export class AdminComponent implements OnInit, AfterViewInit {
     return true;
   }
 
+  // --- ACCIONES ---
+
+  eliminarTodosLosCancelados(): void {
+    this.listaReservas = this.listaReservas.filter(res => res.estado?.id_estado !== 3);
+    this.cargarDiasCalendario();
+    this.inicializarGraficos();
+  }
+
   seleccionarReserva(res: any): void {
     this.reservaSeleccionada = res;
   }
@@ -109,7 +215,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
     return 'Sin registrar';
   }
 
-  // ✅ FIX 1 — Ya no recarga todo, solo actualiza la reserva en memoria
   actualizarEstado(idReserva: number, idEstado: number): void {
     this.reservaService.cambiarEstado(idReserva, idEstado).subscribe(() => {
       const reserva = this.listaReservas.find(r => r.id_reserva === idReserva);
@@ -118,10 +223,31 @@ export class AdminComponent implements OnInit, AfterViewInit {
           id_estado: idEstado,
           nombre_estado: idEstado === 2 ? 'Confirmada' : 'Cancelada'
         };
+        if (idEstado === 2) {
+          this.enviarConfirmacionWhatsApp(reserva);
+        }
       }
       this.cargarDiasCalendario();
       this.inicializarGraficos();
     });
+  }
+
+  enviarConfirmacionWhatsApp(reserva: any): void {
+    const usuario = reserva.usuario || {};
+    const nombreCompleto = `${usuario.nombre || ''} ${usuario.apellido || ''}`.trim() || usuario.usuario;
+
+    const mensaje = `Hola ${nombreCompleto}! 😊 Te confirmamos tu reserva en Cabañas Samarana.
+*Nro de Reserva:* #${reserva.id_reserva}
+*Alojamiento:* ${reserva.alojamiento?.nombre_alojamiento}
+*Ingreso:* ${reserva.fecha_inicio}
+*Egreso:* ${reserva.fecha_fin}
+*Personas:* ${reserva.cantidad_personas}
+*Total:* $${reserva.total_tarifa}
+¡Los esperamos! 🏡`;
+
+    const telefono = usuario.telefono?.replace(/\D/g, '') || '';
+    const url = `https://api.whatsapp.com/send?phone=549${telefono}&text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
   }
 
   eliminarReservaIndividual(res: any): void {
@@ -129,6 +255,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
     this.cargarDiasCalendario();
     this.inicializarGraficos();
   }
+
+  // --- BLOQUEOS ---
 
   agregarBloqueoMantenimiento(): void {
     if (this.nuevoBloqueo.inicio && this.nuevoBloqueo.fin) {
@@ -144,6 +272,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
     this.cargarDiasCalendario();
     this.inicializarGraficos();
   }
+
+  // --- CALENDARIO ---
 
   mesAnterior(): void {
     this.fechaCalendarioActual = new Date(this.fechaCalendarioActual.getFullYear(), this.fechaCalendarioActual.getMonth() - 1, 1);
@@ -195,6 +325,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
     if (reserva) return reserva.estado?.id_estado === 1 ? 'pendiente' : 'ocupado';
     return 'libre';
   }
+
+  // --- GRÁFICOS ---
 
   inicializarGraficos(): void {
     if (!this.listaReservas) return;
@@ -254,5 +386,5 @@ export class AdminComponent implements OnInit, AfterViewInit {
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
     });
   }
-}
 
+}

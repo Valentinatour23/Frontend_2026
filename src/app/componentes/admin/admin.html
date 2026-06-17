@@ -1,263 +1,289 @@
 <section class="admin-container">
-  <div class="admin-header">
-    <div class="header-main">
-      <h2><i class="fa-solid fa-sliders"></i> Panel de Control - Cabañas Samarana</h2>
+
+  <!-- HEADER -->
+ <div class="admin-header">
+  <div class="header-main">
+    <h2><i class="fa-solid fa-sliders"></i> Panel de Control - Cabañas Samarana</h2>
+    <div class="header-actions">
+      <button class="btn-inicio" (click)="irAlInicio()">
+        <i class="fa-solid fa-house"></i> Ir al Inicio
+      </button>
       <button class="btn-clean-all" (click)="eliminarTodosLosCancelados()">
         <i class="fa-solid fa-trash-can"></i> Limpiar Cancelados
       </button>
     </div>
-    <p>Gestión y validación de reservas en tiempo real.</p>
+  </div>
+  <p>Gestión y validación de reservas en tiempo real.</p>
+</div>
+
+  <!-- NAVEGACIÓN POR PESTAÑAS -->
+  <div class="pestanas-nav">
+    <button class="pestana-btn" [class.active]="pestanaActiva === 'dashboard'" (click)="cambiarPestana('dashboard')">
+      <i class="fa-solid fa-chart-pie"></i> Dashboard
+    </button>
+    <button class="pestana-btn" [class.active]="pestanaActiva === 'reservas'" (click)="cambiarPestana('reservas')">
+      <i class="fa-solid fa-calendar-check"></i> Reservas
+    </button>
+    <button class="pestana-btn" [class.active]="pestanaActiva === 'calendario'" (click)="cambiarPestana('calendario')">
+      <i class="fa-solid fa-calendar-days"></i> Calendario
+    </button>
+    <button class="pestana-btn" [class.active]="pestanaActiva === 'estadisticas'" (click)="cambiarPestana('estadisticas')">
+      <i class="fa-solid fa-chart-line"></i> Estadísticas
+    </button>
   </div>
 
+  <!-- ===== PESTAÑA DASHBOARD ===== -->
+  <div *ngIf="pestanaActiva === 'dashboard'">
 
-
-
-  <div class="search-filters-bar">
-    <div class="filter-group text-search">
-      <label><i class="fa-solid fa-magnifying-glass"></i> Buscar Cliente</label>
-      <input type="text" [(ngModel)]="textoBusqueda" placeholder="Ej: Laura, Fito...">
-    </div>
-    <div class="filter-group">
-      <label><i class="fa-solid fa-house-user"></i> Unidad</label>
-      <select [(ngModel)]="cabanaSeleccionada">
-        <option value="todas">Todos los Bungalows</option>
-        <option value="Bungalow A">Bungalow A</option>
-        <option value="Bungalow B">Bungalow B</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label><i class="fa-solid fa-calendar-day"></i> Desde</label>
-      <input type="date" [(ngModel)]="fechaDesde">
-    </div>
-    <div class="filter-group">
-      <label><i class="fa-solid fa-calendar-day"></i> Hasta</label>
-      <input type="date" [(ngModel)]="fechaHasta">
-    </div>
-  </div>
-
-
-
-
-  <div class="filter-tabs">
-    <button class="tab-btn" [class.active]="filtroActual === 'todos'" (click)="cambiarFiltro('todos')">Todas</button>
-    <button class="tab-btn btn-tab-pendiente" [class.active]="filtroActual === 'pendientes'" (click)="cambiarFiltro('pendientes')">Pendientes</button>
-    <button class="tab-btn btn-tab-cancelada" [class.active]="filtroActual === 'canceladas'" (click)="cambiarFiltro('canceladas')">Canceladas</button>
-  </div>
-
-
-
-
-  <div class="table-responsive">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>Nro</th>
-          <th>Cliente</th>
-          <th>Alojamiento</th>
-          <th>Ingreso</th>
-          <th>Egreso</th>
-          <th class="text-center">Pers.</th>
-          <th>Total a Pagar</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let res of listaReservas; let i = index"
-            [hidden]="!debeMostrarReserva(res)"
-            (click)="seleccionarReserva(res)"
-            [class.fila-seleccionada]="reservaSeleccionada?.id_reserva === res.id_reserva"
-            style="cursor: pointer;">
-         
-          <td><strong>#{{ i + 1 }}</strong></td>
-          <td>{{ obtenerNombreCliente(res.usuario) }}</td>
-          <td>{{ res.alojamiento?.nombre_alojamiento }}</td>
-          <td>{{ res.fecha_inicio | date:'dd/MM/yyyy' }}</td>
-          <td>{{ res.fecha_fin | date:'dd/MM/yyyy' }}</td>
-          <td class="text-center">{{ res.cantidad_personas }}</td>
-          <td style="font-weight: 600; color: #433529;">${{ res.total_tarifa | number:'1.0-0' }}</td>
-          <td>
-            <span class="badge" [ngClass]="{
-              'badge-pendiente': res.estado?.id_estado === 1,
-              'badge-confirmada': res.estado?.id_estado === 2,
-              'badge-cancelada': res.estado?.id_estado === 3
-            }">{{ res.estado?.nombre_estado }}</span>
-          </td>
-          <td (click)="$event.stopPropagation()">
-            <div class="action-buttons">
-              <button *ngIf="res.estado?.id_estado === 1" (click)="actualizarEstado(res.id_reserva, 2)" class="btn-action btn-confirm" title="Confirmar Pago">✓</button>
-              <button *ngIf="res.estado?.id_estado !== 3" (click)="actualizarEstado(res.id_reserva, 3)" class="btn-action btn-cancel" title="Cancelar Reserva">✕</button>
-              <button *ngIf="res.estado?.id_estado === 3" (click)="eliminarReservaIndividual(res)" class="btn-action btn-delete" title="Eliminar registro"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-       
-        <tr *ngIf="listaReservas.length === 0">
-          <td colspan="9" class="text-center no-data">No hay registros de reservas cargados en el sistema.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-
-
-
-  <div class="analytics-section">
-    <div class="chart-card">
-      <h3>Estado de Ocupación</h3>
-      <div class="chart-container">
-        <canvas id="canvasOcupacion"></canvas>
+    <div class="dashboard-cards">
+      <div class="card-kpi">
+        <span>Reservas Activas</span>
+        <h3>{{ totalReservasActivas }}</h3>
+      </div>
+      <div class="card-kpi">
+        <span>Ingresos del Mes</span>
+        <h3>${{ ingresosMesActual | number:'1.0-0' }}</h3>
+      </div>
+      <div class="card-kpi">
+        <span>Pendientes de Cobro</span>
+        <h3>{{ totalPendientes }}</h3>
+      </div>
+      <div class="card-kpi">
+        <span>Próximo Check-in</span>
+        <h3 style="font-size:14px; margin-top:8px;">{{ proximoCheckIn }}</h3>
       </div>
     </div>
-    <div class="chart-card">
-      <h3>Evolución de Ingresos</h3>
-      <div class="chart-container">
-        <canvas id="canvasIngresos"></canvas>
+
+    <div class="proximas-llegadas" *ngIf="proximasLlegadas.length > 0">
+      <h3><i class="fa-solid fa-plane-arrival"></i> Próximas Llegadas — Esta Semana</h3>
+      <div class="llegadas-grid">
+        <div class="llegada-card" *ngFor="let r of proximasLlegadas">
+          <div class="llegada-fecha">{{ r.fecha_inicio | date:'dd/MM' }}</div>
+          <div class="llegada-info">
+            <div class="llegada-nombre">{{ obtenerNombreCliente(r.usuario) }}</div>
+            <div class="llegada-detalle">{{ r.alojamiento?.nombre_alojamiento }} · {{ r.cantidad_personas }} pers.</div>
+          </div>
+          <span class="badge" [ngClass]="{
+            'badge-pendiente': r.estado?.id_estado === 1,
+            'badge-confirmada': r.estado?.id_estado === 2
+          }">{{ r.estado?.nombre_estado }}</span>
+        </div>
       </div>
     </div>
-    <div class="chart-card block-wide">
-      <h3>Meses de Mayor Demanda</h3>
-      <div class="chart-container">
-        <canvas id="canvasMesesReservas"></canvas>
-      </div>
+
+    <div *ngIf="proximasLlegadas.length === 0" class="sin-llegadas">
+      <i class="fa-solid fa-moon"></i> No hay llegadas programadas para esta semana.
     </div>
+
   </div>
 
+  <!-- ===== PESTAÑA RESERVAS ===== -->
+  <div *ngIf="pestanaActiva === 'reservas'">
 
-
-
-  <div class="maintenance-action-bar">
-    <div class="maint-title">
-      <h3><i class="fa-solid fa-hammer"></i> Gestión de Bloqueos y Mantenimiento</h3>
-      <p>Bloqueá días en el calendario de forma operativa</p>
-    </div>
-   
-    <div class="maint-fields-row">
-      <div class="maint-field">
-        <label>Cabaña</label>
-        <select [(ngModel)]="nuevoBloqueo.cabana">
+    <div class="search-filters-bar">
+      <div class="filter-group text-search">
+        <label><i class="fa-solid fa-magnifying-glass"></i> Buscar Cliente</label>
+        <input type="text" [(ngModel)]="textoBusqueda" placeholder="Ej: Laura, Fito...">
+      </div>
+      <div class="filter-group">
+        <label><i class="fa-solid fa-house-user"></i> Unidad</label>
+        <select [(ngModel)]="cabanaSeleccionada">
+          <option value="todas">Todos los Bungalows</option>
           <option value="Bungalow A">Bungalow A</option>
           <option value="Bungalow B">Bungalow B</option>
         </select>
       </div>
-     
-      <div class="maint-field text-flex">
-        <label>Motivo del Bloqueo</label>
-        <input type="text" [(ngModel)]="nuevoBloqueo.motivo" placeholder="Ej: Pintura, filtraciones...">
+      <div class="filter-group">
+        <label><i class="fa-solid fa-calendar-day"></i> Desde</label>
+        <input type="date" [(ngModel)]="fechaDesde">
       </div>
-
-
-
-
-      <div class="maint-field">
-        <label>Desde</label>
-        <input type="date" [(ngModel)]="nuevoBloqueo.inicio">
-      </div>
-
-
-
-
-      <div class="maint-field">
-        <label>Hasta (Inclusive)</label>
-        <input type="date" [(ngModel)]="nuevoBloqueo.fin">
-      </div>
-
-
-
-
-      <button class="btn-maint-submit" (click)="agregarBloqueoMantenimiento()">
-        <i class="fa-solid fa-ban"></i> Aplicar Bloqueo
-      </button>
-    </div>
-
-
-
-
-    <div class="active-blocks-list" *ngIf="bloqueosActivos && bloqueosActivos.length > 0">
-      <h4>Bloqueos Activos (Hacé click en la ✕ para liberar la unidad):</h4>
-      <div class="blocks-grid">
-        <div class="block-badge" *ngFor="let b of bloqueosActivos; let idx = index">
-          <span>
-            <strong>{{ b.cabana }}</strong>:
-            {{ b.inicio | date:'dd/MM/yyyy' }} al {{ b.fin | date:'dd/MM/yyyy' }}
-            <em *ngIf="b.motivo">— {{ b.motivo }}</em>
-          </span>
-          <button class="btn-remove-block" (click)="eliminarBloqueo(idx)">✕</button>
-        </div>
+      <div class="filter-group">
+        <label><i class="fa-solid fa-calendar-day"></i> Hasta</label>
+        <input type="date" [(ngModel)]="fechaHasta">
       </div>
     </div>
+
+    <div class="filter-tabs">
+      <button class="tab-btn" [class.active]="filtroActual === 'todos'" (click)="cambiarFiltro('todos')">Todas</button>
+      <button class="tab-btn" [class.active]="filtroActual === 'pendientes'" (click)="cambiarFiltro('pendientes')">Pendientes</button>
+      <button class="tab-btn" [class.active]="filtroActual === 'canceladas'" (click)="cambiarFiltro('canceladas')">Canceladas</button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nro</th>
+            <th>Cliente</th>
+            <th>Alojamiento</th>
+            <th>Ingreso</th>
+            <th>Egreso</th>
+            <th class="text-center">Pers.</th>
+            <th>Total a Pagar</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let res of listaReservas; let i = index"
+              [hidden]="!debeMostrarReserva(res)"
+              (click)="seleccionarReserva(res)"
+              [class.fila-seleccionada]="reservaSeleccionada?.id_reserva === res.id_reserva"
+              style="cursor: pointer;">
+            <td><strong>#{{ i + 1 }}</strong></td>
+            <td>{{ obtenerNombreCliente(res.usuario) }}</td>
+            <td>{{ res.alojamiento?.nombre_alojamiento }}</td>
+            <td>{{ res.fecha_inicio | date:'dd/MM/yyyy' }}</td>
+            <td>{{ res.fecha_fin | date:'dd/MM/yyyy' }}</td>
+            <td class="text-center">{{ res.cantidad_personas }}</td>
+            <td style="font-weight: 600; color: #433529;">${{ res.total_tarifa | number:'1.0-0' }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'badge-pendiente': res.estado?.id_estado === 1,
+                'badge-confirmada': res.estado?.id_estado === 2,
+                'badge-cancelada': res.estado?.id_estado === 3
+              }">{{ res.estado?.nombre_estado }}</span>
+            </td>
+            <td (click)="$event.stopPropagation()">
+              <div class="action-buttons">
+                <button *ngIf="res.estado?.id_estado === 1" (click)="actualizarEstado(res.id_reserva, 2)" class="btn-action btn-confirm" title="Confirmar Pago">✓</button>
+                <button *ngIf="res.estado?.id_estado !== 3" (click)="actualizarEstado(res.id_reserva, 3)" class="btn-action btn-cancel" title="Cancelar Reserva">✕</button>
+                <button *ngIf="res.estado?.id_estado === 3" (click)="eliminarReservaIndividual(res)" class="btn-action btn-delete" title="Eliminar registro"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="listaReservas.length === 0">
+            <td colspan="9" class="text-center no-data">No hay registros de reservas cargados en el sistema.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 
+  <!-- ===== PESTAÑA CALENDARIO ===== -->
+  <div *ngIf="pestanaActiva === 'calendario'">
 
-
-
-  <div class="split-calendars-wrapper">
-    <div class="calendars-master-header">
-      <button class="cal-nav-btn" (click)="mesAnterior()">◀ Ant</button>
-      <h2>Disponibilidad Integral: {{ nombresMeses[fechaCalendarioActual.getMonth()] }} - {{ fechaCalendarioActual.getFullYear() }}</h2>
-      <button class="cal-nav-btn" (click)="mesSiguiente()">Sig ▶</button>
-    </div>
-
-
-
-
-    <div class="calendar-legends-bar">
-      <span class="leg-item"><span class="leg-color libre"></span> Disponible (Gris)</span>
-      <span class="leg-item"><span class="leg-color pendiente"></span> Pendiente (Naranja)</span>
-      <span class="leg-item"><span class="leg-color ocupado"></span> Reservado (Verde)</span>
-      <span class="leg-item"><span class="leg-color mantenimiento"></span> Fuera de Servicio (Amarillo)</span>
-    </div>
-
-
-
-
-    <div class="calendars-row">
-      <div class="calendar-mini-card">
-        <h3>Bungalow A</h3>
-        <div class="calendar-grid">
-          <div class="day-name">Lu</div><div class="day-name">Ma</div><div class="day-name">Mi</div>
-          <div class="day-name">Ju</div><div class="day-name">Vi</div><div class="day-name">Sá</div>
-          <div class="day-name">Do</div>
-
-
-
-
-          <div *ngFor="let dia of diasBungalowA" class="calendar-day" [ngClass]="{
-            'day-vacio': dia.estado === 'vacio',
-            'day-libre': dia.estado === 'libre',
-            'day-pendiente': dia.estado === 'pendiente',
-            'day-ocupado': dia.estado === 'ocupado',
-            'day-mantenimiento': dia.estado === 'mantenimiento'
-          }">
-            {{ dia.numero }}
-          </div>
-        </div>
+    <div class="maintenance-action-bar">
+      <div class="maint-title">
+        <h3><i class="fa-solid fa-hammer"></i> Gestión de Bloqueos y Mantenimiento</h3>
+        <p>Bloqueá días en el calendario de forma operativa</p>
       </div>
-
-
-
-
-      <div class="calendar-mini-card">
-        <h3>Bungalow B</h3>
-        <div class="calendar-grid">
-          <div class="day-name">Lu</div><div class="day-name">Ma</div><div class="day-name">Mi</div>
-          <div class="day-name">Ju</div><div class="day-name">Vi</div><div class="day-name">Sá</div>
-          <div class="day-name">Do</div>
-
-
-
-
-          <div *ngFor="let dia of diasBungalowB" class="calendar-day" [ngClass]="{
-            'day-vacio': dia.estado === 'vacio',
-            'day-libre': dia.estado === 'libre',
-            'day-pendiente': dia.estado === 'pendiente',
-            'day-ocupado': dia.estado === 'ocupado',
-            'day-mantenimiento': dia.estado === 'mantenimiento'
-          }">
-            {{ dia.numero }}
+      <div class="maint-fields-row">
+        <div class="maint-field">
+          <label>Cabaña</label>
+          <select [(ngModel)]="nuevoBloqueo.cabana">
+            <option value="Bungalow A">Bungalow A</option>
+            <option value="Bungalow B">Bungalow B</option>
+          </select>
+        </div>
+        <div class="maint-field text-flex">
+          <label>Motivo del Bloqueo</label>
+          <input type="text" [(ngModel)]="nuevoBloqueo.motivo" placeholder="Ej: Pintura, filtraciones...">
+        </div>
+        <div class="maint-field">
+          <label>Desde</label>
+          <input type="date" [(ngModel)]="nuevoBloqueo.inicio">
+        </div>
+        <div class="maint-field">
+          <label>Hasta (Inclusive)</label>
+          <input type="date" [(ngModel)]="nuevoBloqueo.fin">
+        </div>
+        <button class="btn-maint-submit" (click)="agregarBloqueoMantenimiento()">
+          <i class="fa-solid fa-ban"></i> Aplicar Bloqueo
+        </button>
+      </div>
+      <div class="active-blocks-list" *ngIf="bloqueosActivos && bloqueosActivos.length > 0">
+        <h4>Bloqueos Activos:</h4>
+        <div class="blocks-grid">
+          <div class="block-badge" *ngFor="let b of bloqueosActivos; let idx = index">
+            <span>
+              <strong>{{ b.cabana }}</strong>:
+              {{ b.inicio | date:'dd/MM/yyyy' }} al {{ b.fin | date:'dd/MM/yyyy' }}
+              <em *ngIf="b.motivo">— {{ b.motivo }}</em>
+            </span>
+            <button class="btn-remove-block" (click)="eliminarBloqueo(idx)">✕</button>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="split-calendars-wrapper">
+      <div class="calendars-master-header">
+        <button class="cal-nav-btn" (click)="mesAnterior()">◀ Ant</button>
+        <h2>Disponibilidad Integral: {{ nombresMeses[fechaCalendarioActual.getMonth()] }} - {{ fechaCalendarioActual.getFullYear() }}</h2>
+        <button class="cal-nav-btn" (click)="mesSiguiente()">Sig ▶</button>
+      </div>
+      <div class="calendar-legends-bar">
+        <span class="leg-item"><span class="leg-color libre"></span> Disponible (Gris)</span>
+        <span class="leg-item"><span class="leg-color pendiente"></span> Pendiente (Naranja)</span>
+        <span class="leg-item"><span class="leg-color ocupado"></span> Reservado (Verde)</span>
+        <span class="leg-item"><span class="leg-color mantenimiento"></span> Fuera de Servicio (Amarillo)</span>
+      </div>
+      <div class="calendars-row">
+        <div class="calendar-mini-card">
+          <h3>Bungalow A</h3>
+          <div class="calendar-grid">
+            <div class="day-name">Lu</div><div class="day-name">Ma</div><div class="day-name">Mi</div>
+            <div class="day-name">Ju</div><div class="day-name">Vi</div><div class="day-name">Sá</div><div class="day-name">Do</div>
+            <div *ngFor="let dia of diasBungalowA" class="calendar-day" [ngClass]="{
+              'day-vacio': dia.estado === 'vacio',
+              'day-libre': dia.estado === 'libre',
+              'day-pendiente': dia.estado === 'pendiente',
+              'day-ocupado': dia.estado === 'ocupado',
+              'day-mantenimiento': dia.estado === 'mantenimiento'
+            }">{{ dia.numero }}</div>
+          </div>
+        </div>
+        <div class="calendar-mini-card">
+          <h3>Bungalow B</h3>
+          <div class="calendar-grid">
+            <div class="day-name">Lu</div><div class="day-name">Ma</div><div class="day-name">Mi</div>
+            <div class="day-name">Ju</div><div class="day-name">Vi</div><div class="day-name">Sá</div><div class="day-name">Do</div>
+            <div *ngFor="let dia of diasBungalowB" class="calendar-day" [ngClass]="{
+              'day-vacio': dia.estado === 'vacio',
+              'day-libre': dia.estado === 'libre',
+              'day-pendiente': dia.estado === 'pendiente',
+              'day-ocupado': dia.estado === 'ocupado',
+              'day-mantenimiento': dia.estado === 'mantenimiento'
+            }">{{ dia.numero }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-</section>
+
+   <!-- ===== PESTAÑA ESTADÍSTICAS ===== -->
+<div *ngIf="pestanaActiva === 'estadisticas'">
+
+  <div style="display:flex; justify-content:flex-end; margin-bottom:16px;">
+    <button class="btn-export" (click)="exportarExcel()">
+      <i class="fa-solid fa-file-excel"></i> Exportar a Excel
+    </button>
+  </div>
+
+  <div class="analytics-section">
+
+  <div *ngIf="pestanaActiva === 'estadisticas'">
+    <div class="analytics-section">
+      <div class="chart-card">
+        <h3>Estado de Ocupación</h3>
+        <div class="chart-container">
+          <canvas id="canvasOcupacion"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Evolución de Ingresos</h3>
+        <div class="chart-container">
+          <canvas id="canvasIngresos"></canvas>
+        </div>
+      </div>
+      <div class="chart-card block-wide">
+        <h3>Meses de Mayor Demanda</h3>
+        <div class="chart-container">
+          <canvas id="canvasMesesReservas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
